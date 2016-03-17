@@ -8,8 +8,9 @@
 #include <iostream>
 
 #include <QtGui/QKeyEvent>
-#include <QtWidgets/QFileDialog>
 #include <QtConcurrent/QtConcurrentMap>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -30,11 +31,17 @@ public:
     }
     virtual ~Median() = default;
 
-    QImage operator()(const Mat& input) {
+    QImage operator()(const Mat& a) {
         try {
-            Mat a = input, b, c, d;
-            cvtColor(a, b, CV_RGB2GRAY);
+            Mat b;
+            if (a.channels() > 1) {
+                cvtColor(a, b, CV_RGB2GRAY);
+            }else{
+                b = a.clone();
+            }
+            Mat c;
             medianBlur(b, c, size);
+            Mat d;
             cvtColor(c, d, CV_GRAY2RGB);
             return QtAndOpenCvTools::Mat2QImage(d);
         } catch (const exception& e) {
@@ -58,7 +65,11 @@ public:
     QImage operator()(const Mat& a) {
         try {
             Mat b;
-            cvtColor(a, b, CV_RGB2GRAY);
+            if (a.channels() > 1) {
+                cvtColor(a, b, CV_RGB2GRAY);
+            }else{
+                b = a.clone();
+            }
 
             Mat c;
             medianBlur(b, c, size);
@@ -130,7 +141,7 @@ void MainWidget::keyPressEvent(QKeyEvent* e) {
 }
 
 void MainWidget::onOpenButton() {
-    _input = QtAndOpenCvTools::QImage2Mat(QImage(QFileDialog::getOpenFileName(nullptr, "Open image file", "/home", "Images (*.png *.xpm *.jpg)")));
+    _input = QtAndOpenCvTools::QImage2Mat(QImage(QFileDialog::getOpenFileName(nullptr, "Open image file", "/home", "Images (*.png *.xpm *.jpg *.bmp)")));
     recalcMedian();
     recalcCanny();
 }
@@ -143,7 +154,7 @@ void MainWidget::recalcMedian() {
 }
 
 void MainWidget::showSaltPepper(int int1) {
-    saltPepperInputLabel->setPixmap(QPixmap::fromImage(QtAndOpenCvTools::Mat2QImage(_input)));
+    saltPepperInputLabel->setPixmap(QPixmap::fromImage(_input.empty() ? QImage(":/error.png") : QtAndOpenCvTools::Mat2QImage(_input)));
     saltPepperOutputLabel->setPixmap(QPixmap::fromImage(_medianFuture->resultAt(int1)));
 }
 
@@ -158,7 +169,7 @@ void MainWidget::recalcCanny() {
 }
 
 void MainWidget::showCanny(int int1) {
-    cannyInputLabel->setPixmap(QPixmap::fromImage(QtAndOpenCvTools::Mat2QImage(_input)));
+    cannyInputLabel->setPixmap(QPixmap::fromImage(_input.empty() ? QImage(":/error.png") : QtAndOpenCvTools::Mat2QImage(_input)));
     cannyOutputLabel->setPixmap(QPixmap::fromImage(_cannyFuture->resultAt(int1)));
 }
 
