@@ -18,7 +18,7 @@ using namespace std;
 int main(int argc, char **argv) {
     QApplication app { argc, argv };
     try {
-        MainWidget mw;
+        MainWidget mw(argc > 1 ? argv[1] : "");
         mw.show();
         return app.exec();
     } catch (exception const& e) {

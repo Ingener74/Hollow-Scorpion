@@ -12,4 +12,6 @@ add_executable(HollowScorpion ${HOLLOW_SCORPION_RESOURCES} ${HOLLOW_SCORPION_UI}
 target_link_libraries(HollowScorpion 
     Qt5::Widgets 
     Qt5::Core 
+    Qt5::Concurrent
+    ${OpenCV_LIBS}
 )

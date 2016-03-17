@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1157</width>
-    <height>656</height>
+    <width>494</width>
+    <height>287</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,15 +43,112 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
       <widget class="QGroupBox" name="saltAndPepperGroupBox">
        <property name="title">
-        <string>Удалены &quot;Соль и перец&quot;</string>
+        <string>Удалены &quot;Соль и перец&quot; параметры</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QGraphicsView" name="saltPepperGraphicsView"/>
+         <widget class="QSpinBox" name="saltPepperSpinBox">
+          <property name="minimum">
+           <number>3</number>
+          </property>
+          <property name="maximum">
+           <number>7</number>
+          </property>
+          <property name="singleStep">
+           <number>2</number>
+          </property>
+          <property name="value">
+           <number>3</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QGroupBox" name="contoursGroupBox">
+       <property name="title">
+        <string>Выделение контуров параметры</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QSpinBox" name="cannySpinBox">
+          <property name="minimum">
+           <number>3</number>
+          </property>
+          <property name="maximum">
+           <number>7</number>
+          </property>
+          <property name="singleStep">
+           <number>2</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="lowThresholdSlider">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="highThresholdSlider">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="value">
+           <number>150</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Удалены &quot;Соль и перец&quot; вывод</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="saltPepperInputLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="saltPepperOutputLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="saveSaltAntPepperPushButton">
@@ -63,14 +160,25 @@
        </layout>
       </widget>
      </item>
-     <item>
-      <widget class="QGroupBox" name="contoursGroupBox">
+     <item row="1" column="1">
+      <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
-        <string>Выделены контрасные контуры</string>
+        <string>Выделение контуров вывод</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QGraphicsView" name="contourGraphicsView"/>
+         <widget class="QLabel" name="cannyInputLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="cannyOutputLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="saveContourPushButton">

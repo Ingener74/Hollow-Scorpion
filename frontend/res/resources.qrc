@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>scorpion.png</file>
         <file>no-image.png</file>
+        <file>error.png</file>
     </qresource>
 </RCC>

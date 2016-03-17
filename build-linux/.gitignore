@@ -1,0 +1,6 @@
+/backend/
+/CMakeFiles/
+/frontend/
+/cmake_install.cmake
+/CMakeCache.txt
+/Makefile
