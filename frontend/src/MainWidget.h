@@ -38,12 +38,10 @@ public slots:
 
     void recalcMedian();
     void showSaltPepper(int);
-    void saltPepperFinished();
     void saveMedian();
 
     void recalcCanny();
     void showCanny(int);
-    void cannyFinished();
     void saveCanny();
 };
 

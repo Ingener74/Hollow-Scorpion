@@ -104,11 +104,9 @@ MainWidget::MainWidget(const string& fileName, QWidget* parent, Qt::WindowFlags 
 
     _medianFuture.reset(new QFutureWatcher<QImage>(this));
     connect(_medianFuture.get(), SIGNAL(resultReadyAt(int)), SLOT(showSaltPepper(int)));
-    connect(_medianFuture.get(), SIGNAL(finished()), SLOT(saltPepperFinished()));
 
     _cannyFuture.reset(new QFutureWatcher<QImage>(this));
     connect(_cannyFuture.get(), SIGNAL(resultReadyAt(int)), SLOT(showCanny(int)));
-    connect(_cannyFuture.get(), SIGNAL(finished()), SLOT(cannyFinished()));
 
     if(!fileName.empty()){
         _input = QtAndOpenCvTools::QImage2Mat(QImage(QString::fromStdString(fileName)));
@@ -158,9 +156,6 @@ void MainWidget::showSaltPepper(int int1) {
     saltPepperOutputLabel->setPixmap(QPixmap::fromImage(_medianFuture->resultAt(int1)));
 }
 
-void MainWidget::saltPepperFinished() {
-}
-
 void MainWidget::recalcCanny() {
     QList<Mat> images;
     images << _input;
@@ -171,9 +166,6 @@ void MainWidget::recalcCanny() {
 void MainWidget::showCanny(int int1) {
     cannyInputLabel->setPixmap(QPixmap::fromImage(_input.empty() ? QImage(":/error.png") : QtAndOpenCvTools::Mat2QImage(_input)));
     cannyOutputLabel->setPixmap(QPixmap::fromImage(_cannyFuture->resultAt(int1)));
-}
-
-void MainWidget::cannyFinished() {
 }
 
 void MainWidget::saveMedian() {

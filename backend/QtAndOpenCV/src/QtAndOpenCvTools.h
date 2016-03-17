@@ -13,10 +13,12 @@
 
 class QtAndOpenCvTools {
 public:
-    static QImage Mat2QImage(const cv::Mat& src);
-    static cv::Mat QImage2Mat(const QImage& src);
+    static QImage Mat2QImage(const cv::Mat &src);
+
+    static cv::Mat QImage2Mat(const QImage &src);
 
     QtAndOpenCvTools();
+
     virtual ~QtAndOpenCvTools();
 };
 

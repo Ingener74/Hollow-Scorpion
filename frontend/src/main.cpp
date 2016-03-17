@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <stdexcept>
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
@@ -16,12 +15,12 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    QApplication app { argc, argv };
+    QApplication app{argc, argv};
     try {
         MainWidget mw(argc > 1 ? argv[1] : "");
         mw.show();
         return app.exec();
-    } catch (exception const& e) {
+    } catch (exception const &e) {
         QMessageBox::critical(nullptr, "Error", e.what());
     }
 }
