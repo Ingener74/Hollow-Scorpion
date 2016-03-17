@@ -33,14 +33,18 @@ private:
     std::unique_ptr<QFutureWatcher<QImage>> _medianFuture;
     std::unique_ptr<QFutureWatcher<QImage>> _cannyFuture;
 
+    int _enableOpen;
+
 public slots:
     void onOpenButton();
 
     void recalcMedian();
+    void recalcMedian(int);
     void showSaltPepper(int);
     void saveMedian();
 
     void recalcCanny();
+    void recalcCanny(int);
     void showCanny(int);
     void saveCanny();
 };
