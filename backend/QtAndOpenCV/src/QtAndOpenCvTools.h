@@ -9,7 +9,7 @@
 #define BACKEND_QTANDOPENCV_SRC_QTANDOPENCVTOOLS_H_
 
 #include <QtGui/QImage>
-#include <opencv2/core.hpp>
+#include <opencv2/core/core.hpp>
 
 class QtAndOpenCvTools {
 public:
