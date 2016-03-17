@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>scorpion.png</file>
+        <file>no-image.png</file>
+    </qresource>
+</RCC>
