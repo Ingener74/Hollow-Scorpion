@@ -10,6 +10,8 @@
 
 #include <memory>
 
+#include <opencv2/core.hpp>
+
 #include <QtWidgets/QWidget>
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QImage>
@@ -27,8 +29,7 @@ public:
     virtual void keyPressEvent(QKeyEvent *);
 
 private:
-    QString _fileName;
-    QImage _input;
+    cv::Mat _input;
     std::unique_ptr<QFutureWatcher<QImage>> _medianFuture;
     std::unique_ptr<QFutureWatcher<QImage>> _cannyFuture;
 
@@ -38,10 +39,12 @@ public slots:
     void recalcMedian();
     void showSaltPepper(int);
     void saltPepperFinished();
+    void saveMedian();
 
     void recalcCanny();
     void showCanny(int);
     void cannyFinished();
+    void saveCanny();
 };
 
 #endif /* FRONTEND_SRC_MAINWIDGET_H_ */

@@ -14,27 +14,12 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
+#include "QtAndOpenCvTools.h"
+
 #include "MainWidget.h"
 
 using namespace std;
 using namespace cv;
-
-QImage Mat2QImage(const Mat& src)
-{
-     Mat temp;
-     cvtColor(src, temp,CV_BGR2RGB);
-     QImage dest((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-     dest.bits();
-     return dest;
-}
-
-Mat QImage2Mat(const QImage& src)
-{
-     Mat tmp(src.height(),src.width(),CV_8UC3,(uchar*)src.bits(),src.bytesPerLine());
-     Mat result;
-     cvtColor(tmp, result,CV_BGR2RGB);
-     return result;
-}
 
 class Median {
 public:
@@ -45,13 +30,13 @@ public:
     }
     virtual ~Median() = default;
 
-    QImage operator()(const QString& fileName) {
+    QImage operator()(const Mat& input) {
         try {
-            Mat a = QImage2Mat(QImage(fileName)), b, c, d;
+            Mat a = input, b, c, d;
             cvtColor(a, b, CV_RGB2GRAY);
             medianBlur(b, c, size);
             cvtColor(c, d, CV_GRAY2RGB);
-            return Mat2QImage(d);
+            return QtAndOpenCvTools::Mat2QImage(d);
         } catch (const exception& e) {
             cerr << "median error: " << e.what() << endl;
             return QImage(":/error.png");
@@ -70,23 +55,21 @@ public:
     }
     virtual ~Canny() = default;
 
-    QImage operator()(const QString& fileName) {
+    QImage operator()(const Mat& a) {
         try {
-            Mat a = QImage2Mat(QImage(fileName)), b, c;
+            Mat b;
+            cvtColor(a, b, CV_RGB2GRAY);
 
-            Mat gray, edge, draw;
-            cvtColor(a, gray, CV_RGB2GRAY);
+            Mat c;
+            medianBlur(b, c, size);
 
-            cv::Canny(gray, edge, low, high, size);
+            Mat d;
+            cv::Canny(c, d, low, high, size);
 
-//            edge.convertTo(draw, CV_8U);
+            Mat e;
+            cvtColor(d, e, CV_GRAY2RGB);
 
-            cvtColor(edge, draw, CV_GRAY2RGB);
-
-//            Mat out;
-//            cvtColor(draw, out, CV_GRAY2RGB);
-
-            return Mat2QImage(draw);
+            return QtAndOpenCvTools::Mat2QImage(e);
         } catch (const exception& e) {
             cerr << "canny error: " << e.what() << endl;
             return QImage(":/error.png");
@@ -105,6 +88,9 @@ MainWidget::MainWidget(const string& fileName, QWidget* parent, Qt::WindowFlags 
     connect(lowThresholdSlider, SIGNAL(sliderReleased()), SLOT(recalcCanny()));
     connect(highThresholdSlider, SIGNAL(sliderReleased()), SLOT(recalcCanny()));
 
+    connect(saveSaltAntPepperPushButton, SIGNAL(clicked()), SLOT(saveMedian()));
+    connect(saveContourPushButton, SIGNAL(clicked()), SLOT(saveCanny()));
+
     _medianFuture.reset(new QFutureWatcher<QImage>(this));
     connect(_medianFuture.get(), SIGNAL(resultReadyAt(int)), SLOT(showSaltPepper(int)));
     connect(_medianFuture.get(), SIGNAL(finished()), SLOT(saltPepperFinished()));
@@ -114,8 +100,7 @@ MainWidget::MainWidget(const string& fileName, QWidget* parent, Qt::WindowFlags 
     connect(_cannyFuture.get(), SIGNAL(finished()), SLOT(cannyFinished()));
 
     if(!fileName.empty()){
-        _fileName = QString::fromStdString(fileName);
-        _input = QImage(_fileName);
+        _input = QtAndOpenCvTools::QImage2Mat(QImage(QString::fromStdString(fileName)));
     }
 }
 
@@ -126,7 +111,7 @@ void MainWidget::closeEvent(QCloseEvent*) {
 }
 
 void MainWidget::showEvent(QShowEvent*) {
-    if (_fileName.isEmpty()) {
+    if (_input.empty()) {
         saltPepperInputLabel->setPixmap(QPixmap::fromImage(QImage(":/no-image.png")));
         saltPepperOutputLabel->setPixmap(QPixmap::fromImage(QImage(":/no-image.png")));
 
@@ -145,21 +130,20 @@ void MainWidget::keyPressEvent(QKeyEvent* e) {
 }
 
 void MainWidget::onOpenButton() {
-    _fileName = QFileDialog::getOpenFileName(nullptr, "Open image file", "/home", "Images (*.png *.xpm *.jpg)");
-    _input = QImage(_fileName);
+    _input = QtAndOpenCvTools::QImage2Mat(QImage(QFileDialog::getOpenFileName(nullptr, "Open image file", "/home", "Images (*.png *.xpm *.jpg)")));
     recalcMedian();
     recalcCanny();
 }
 
 void MainWidget::recalcMedian() {
-    QStringList files;
-    files << _fileName;
+    QList<Mat> images;
+    images << _input;
     Median median(saltPepperSpinBox->value());
-    _medianFuture->setFuture(QtConcurrent::mapped(files, median));
+    _medianFuture->setFuture(QtConcurrent::mapped(images, median));
 }
 
 void MainWidget::showSaltPepper(int int1) {
-    saltPepperInputLabel->setPixmap(QPixmap::fromImage(_input));
+    saltPepperInputLabel->setPixmap(QPixmap::fromImage(QtAndOpenCvTools::Mat2QImage(_input)));
     saltPepperOutputLabel->setPixmap(QPixmap::fromImage(_medianFuture->resultAt(int1)));
 }
 
@@ -167,16 +151,26 @@ void MainWidget::saltPepperFinished() {
 }
 
 void MainWidget::recalcCanny() {
-    QStringList files;
-    files << _fileName;
+    QList<Mat> images;
+    images << _input;
     ::Canny canny(lowThresholdSlider->value(), highThresholdSlider->value(), cannySpinBox->value());
-    _cannyFuture->setFuture(QtConcurrent::mapped(files, canny));
+    _cannyFuture->setFuture(QtConcurrent::mapped(images, canny));
 }
 
 void MainWidget::showCanny(int int1) {
-    cannyInputLabel->setPixmap(QPixmap::fromImage(_input));
+    cannyInputLabel->setPixmap(QPixmap::fromImage(QtAndOpenCvTools::Mat2QImage(_input)));
     cannyOutputLabel->setPixmap(QPixmap::fromImage(_cannyFuture->resultAt(int1)));
 }
 
 void MainWidget::cannyFinished() {
+}
+
+void MainWidget::saveMedian() {
+    QString fileName = QFileDialog::getSaveFileName(nullptr, "Save median image", "/home", "Png (*.png)");
+    saltPepperOutputLabel->pixmap()->save(fileName + ".png", "PNG", 100);
+}
+
+void MainWidget::saveCanny() {
+    QString fileName = QFileDialog::getSaveFileName(nullptr, "Save canny image", "/home", "Png (*.png)");
+    cannyOutputLabel->pixmap()->save(fileName + ".png", "PNG", 100);
 }

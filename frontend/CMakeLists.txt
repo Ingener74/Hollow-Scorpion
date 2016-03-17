@@ -14,4 +14,5 @@ target_link_libraries(HollowScorpion
     Qt5::Core 
     Qt5::Concurrent
     ${OpenCV_LIBS}
+    QtAndOpenCv
 )

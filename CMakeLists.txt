@@ -22,6 +22,10 @@ include_directories(
 
 add_definitions(-std=c++11)
 
+include_directories(
+    backend/QtAndOpenCV/src
+)
+
 add_subdirectory(backend)
 
 add_subdirectory(frontend)
