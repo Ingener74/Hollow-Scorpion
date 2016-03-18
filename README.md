@@ -61,4 +61,5 @@ pavel@pavel-vb:~/Hollow-Scorpion/build-linux$ ./frontend/HollowScorpion
 ![Github Logo](/help/1.png)
 ![Github Logo](/help/2.png)
 ![Github Logo](/help/3.png)
+![Github Logo](/help/4.png)
 
