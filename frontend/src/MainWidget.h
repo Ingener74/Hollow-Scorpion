@@ -42,11 +42,13 @@ public slots:
     void recalcMedian(int);
     void showSaltPepper(int);
     void saveMedian();
+    QImage median(const cv::Mat&, int size);
 
     void recalcCanny();
     void recalcCanny(int);
     void showCanny(int);
     void saveCanny();
+    QImage canny(const cv::Mat &, int low, int high, int size);
 };
 
 #endif /* FRONTEND_SRC_MAINWIDGET_H_ */

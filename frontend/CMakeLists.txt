@@ -8,10 +8,6 @@ add_executable(HollowScorpion ${HOLLOW_SCORPION_RESOURCES} ${HOLLOW_SCORPION_UI}
         src/main.cpp
         src/MainWidget.h
         src/MainWidget.cpp
-        src/Median.h
-        src/Median.cpp
-        src/Canny.h
-        src/Canny.cpp
         )
 
 target_link_libraries(HollowScorpion
