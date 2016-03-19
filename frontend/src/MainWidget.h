@@ -21,7 +21,7 @@
 class MainWidget: public QWidget, public Ui_MainWidget {
     Q_OBJECT
 public:
-    MainWidget(const std::string& filename, QWidget* parent = 0, Qt::WindowFlags f = 0);
+    MainWidget(const std::string& filename = {}, QWidget* parent = 0, Qt::WindowFlags f = 0);
     virtual ~MainWidget();
 
     virtual void showEvent(QShowEvent *);
@@ -39,13 +39,13 @@ public slots:
     void onOpenButton();
 
     void recalcMedian();
-    void recalcMedian(int);
+    void recalcMedian(int){ recalcMedian(); }
     void showSaltPepper(int);
     void saveMedian();
     QImage median(const cv::Mat&, int size);
 
     void recalcCanny();
-    void recalcCanny(int);
+    void recalcCanny(int){ recalcCanny(); }
     void showCanny(int);
     void saveCanny();
     QImage canny(const cv::Mat &, int low, int high, int size);

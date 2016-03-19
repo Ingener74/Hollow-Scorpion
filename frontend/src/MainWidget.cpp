@@ -72,6 +72,7 @@ void MainWidget::showEvent(QShowEvent*) {
         cannyInputLabel->setPixmap(QPixmap::fromImage(QImage(":/no-image.png")));
         cannyOutputLabel->setPixmap(QPixmap::fromImage(QImage(":/no-image.png")));
     } else {
+        _enableOpen = 2;
         recalcMedian();
         recalcCanny();
     }
@@ -90,18 +91,17 @@ void MainWidget::onOpenButton() {
     _input = QtAndOpenCvTools::QImage2Mat(QImage(fileName));
     
     openImagePushButton->setEnabled(false);
-    _enableOpen = 2;
     saveSaltAntPepperPushButton->setEnabled(false);
     saveContourPushButton->setEnabled(false);
+    _enableOpen = 2;
     recalcMedian();
     recalcCanny();
 }
 
 void MainWidget::recalcMedian() {
-    QList<Mat> images;
-    images << _input;
-    _medianFuture->setFuture(QtConcurrent::mapped(images, std::bind(&MainWidget::median, this, std::placeholders::_1,
-                                                                    saltPepperSpinBox->value())));
+    _medianFuture->setFuture(QtConcurrent::mapped(QList<Mat>{} << _input,
+                                                  std::bind(&MainWidget::median, this, std::placeholders::_1,
+                                                            saltPepperSpinBox->value())));
 }
 
 void MainWidget::showSaltPepper(int int1) {
@@ -114,12 +114,10 @@ void MainWidget::showSaltPepper(int int1) {
 }
 
 void MainWidget::recalcCanny() {
-    QList<Mat> images;
-    images << _input;
-    _cannyFuture->setFuture(QtConcurrent::mapped(images, std::bind(&MainWidget::canny, this, std::placeholders::_1,
-                                                                   lowThresholdSlider->value(),
-                                                                   highThresholdSlider->value(),
-                                                                   cannySpinBox->value())));
+    _cannyFuture->setFuture(QtConcurrent::mapped(QList<Mat>{} << _input,
+                                                 std::bind(&MainWidget::canny, this, std::placeholders::_1,
+                                                           lowThresholdSlider->value(), highThresholdSlider->value(),
+                                                           cannySpinBox->value())));
 }
 
 void MainWidget::showCanny(int int1) {
@@ -147,16 +145,6 @@ void MainWidget::saveCanny() {
     cannyOutputLabel->pixmap()->save(fileName + ".png", "PNG", 100);
 }
 
-
-void MainWidget::recalcMedian(int) {
-    recalcMedian();
-}
-
-void MainWidget::recalcCanny(int) {
-    recalcCanny();
-}
-
-
 QImage MainWidget::median(const cv::Mat & a, int size) {
     try {
         Mat b;
@@ -165,10 +153,13 @@ QImage MainWidget::median(const cv::Mat & a, int size) {
         } else {
             b = a.clone();
         }
+
         Mat c;
         medianBlur(b, c, size);
+
         Mat d;
         cvtColor(c, d, CV_GRAY2RGB);
+
         return QtAndOpenCvTools::Mat2QImage(d);
     } catch (const exception &e) {
         cerr << "median error: " << e.what() << endl;
