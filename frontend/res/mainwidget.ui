@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>494</width>
-    <height>287</height>
+    <height>288</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Hollow Scorpion - тестовое задание для Ivideon</string>
+   <string>Hollow Scorpion</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">

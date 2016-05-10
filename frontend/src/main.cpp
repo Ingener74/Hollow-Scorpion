@@ -14,7 +14,7 @@
 
 using namespace std;
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
     QApplication app{argc, argv};
     try {
         MainWidget mw{argc > 1 ? argv[1] : string{}};

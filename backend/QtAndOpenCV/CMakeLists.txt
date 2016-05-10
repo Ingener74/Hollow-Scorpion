@@ -1,10 +1,12 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 set(QtAndOpenCv_SOURCES
     src/QtAndOpenCvTools.cpp
     src/QtAndOpenCvTools.h
 )
 
-add_definitions(-fPIC)
+if(NOT WIN32)
+	add_definitions(-fPIC)
+endif()
 
 add_library(QtAndOpenCv ${QtAndOpenCv_SOURCES})

@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
+
+project(HollowScorpion)
 
 # add_subdirectory(3rdparty)
 
@@ -20,7 +22,9 @@ include_directories(
         ${OpenCV_INCLUDE_DIRS}
 )
 
-add_definitions(-std=c++11)
+if(NOT WIN32)
+	add_definitions(-std=c++11)
+endif()
 
 include_directories(
         ${CMAKE_BINARY_DIR}/frontend/src/

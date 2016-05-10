@@ -37,8 +37,8 @@ QImage QtAndOpenCvTools::Mat2QImage(const Mat &src) {
         }
 
         default:
-            cerr << __PRETTY_FUNCTION__ << " Mat image type not handled in switch " << src.type() << endl;
-            break;
+			cerr << " Mat image type not handled in switch " << src.type() << endl;
+			break;
     }
 
     return QImage();
@@ -53,8 +53,8 @@ Mat QtAndOpenCvTools::QImage2Mat(const QImage &src) {
         }
         case QImage::Format_RGB888: {
             if (!inCloneImageData)
-                cout << __PRETTY_FUNCTION__ << " conversion requires cloning since we use a temporary QImage";
-            QImage swapped = src.rgbSwapped();
+				cout << " conversion requires cloning since we use a temporary QImage";
+			QImage swapped = src.rgbSwapped();
             return Mat(swapped.height(), swapped.width(), CV_8UC3, const_cast<uchar *>(swapped.bits()),
                        swapped.bytesPerLine()).clone();
         }
@@ -68,8 +68,8 @@ Mat QtAndOpenCvTools::QImage2Mat(const QImage &src) {
         }
 
         default:
-            cerr << __PRETTY_FUNCTION__ << " QImage format not handled in switch " << src.format() << endl;
-            break;
+			cerr << " QImage format not handled in switch " << src.format() << endl;
+			break;
     }
     return Mat();
 }

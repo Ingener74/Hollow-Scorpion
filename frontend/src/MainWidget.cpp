@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <functional>
 
 #include <QtGui/QKeyEvent>
 #include <QtConcurrent/QtConcurrentMap>
